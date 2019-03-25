@@ -2,10 +2,11 @@ from Func import setfunc
 import random
 def takelast(mylist):
     return mylist[-1]
+C1=2
+C2=2
 class Jaya:
     def __init__(self,dim_num,popsize,iter_num,bounds,fitness_func):
         '''
-
         :param dim_num:
         :param popsize:
         :param iter_num:
@@ -21,7 +22,7 @@ class Jaya:
 
     def func(self,x):
         self.invoke+=1
-        if(self.invoke>5e5):
+        if(self.invoke>1e6):
             # 调用超过5e5次抛出异常，停止仿真
             raise RuntimeError("调用次数超过限制")
         return self.fitness_func(x)
@@ -53,8 +54,8 @@ class Jaya:
         for i in range(self.iter_num):
             for j in range(1,self.popsize-1):
                 for k in range(self.dim_num):
-                    self.pop[j][k]=self.pop[j][k]+random.uniform(0,1)*(
-                            self.pop[0][k]-self.pop[j][k])-random.uniform(0,1)*(self.pop[-1][k]-self.pop[j][k])
+                    self.pop[j][k]=self.pop[j][k]+C1*random.uniform(0,1)*(
+                            self.pop[0][k]-self.pop[j][k])-C2*random.uniform(0,1)*(self.pop[-1][k]-self.pop[j][k])
                     if(Jaya.isExceed(self.pop[j][0:-1],self.bounds)):
                         self.pop[j][0:-1]=Jaya.initilizeOne(self.dim_num,self.bounds)
                     self.pop[j][-1]=self.func(self.pop[j][0:-1])
@@ -64,6 +65,6 @@ class Jaya:
 
 
 if __name__=='__main__':
-    func,dim_num=setfunc("SumSquare")
-    jaya=Jaya(dim_num,50,10000,[[-10,10],[-10,10]],func)
+    func,dim_num=setfunc("sphere")
+    jaya=Jaya(dim_num,50,100000,[[-2,2],[-2,2]],func)
     jaya.run()
