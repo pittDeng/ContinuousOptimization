@@ -24,7 +24,7 @@ class PSO:
             raise RuntimeError('bounds矩阵的维数与dim_num不一致')
     def innerfunc(self,x):
         self.invoke+=1
-        if(self.invoke>5e5):
+        if(self.invoke>1e5):
             raise RuntimeError("超过调用次数")
         return func(x)
     def isExceed(self,x):
@@ -53,14 +53,12 @@ class PSO:
         item['v']=np.array(item['v'])
         return item
 
-
     def __initilize(self):
         self.pop=[]
         for i in range(self.pop_size):
             self.pop.append(self.__initilizeOne())
         self.pop.sort(key=takefitness)
         self.gbest=self.pop[0]['pos']
-
 
     def __go(self):
         for i in range(self.iter_num):
@@ -75,7 +73,13 @@ class PSO:
             self.pop.sort(key=takefitness)
             if(self.pop[0]['pos'][-1]<self.gbest[-1]):
                 self.gbest =np.array(self.pop[0]['pos'])
-            print('{}th best:'.format(i),self.gbest)
+            if(self.dim_num>4):
+                print('{}th best:'.format(i), self.gbest[-1])
+            else:
+                print('{}th best:'.format(i), self.gbest)
+
+
+
 
     def run(self):
         self.__initilize()
@@ -83,9 +87,11 @@ class PSO:
 
 
 if __name__=='__main__':
-
-    func,dim_num=setfunc('sincos')
-    pso=PSO(dim_num=dim_num,func=func,iter_num=50000,pop_size=50,bounds=[[-1,1],[-1,1],[-1,1]])
+    dim_num=30
+    func=setfunc('sincos',dim_num=dim_num)
+    from WWO import genBounds
+    bounds=genBounds(-100,100,dim_num)
+    pso=PSO(dim_num=dim_num,func=func,iter_num=300,pop_size=50,bounds=bounds)
     pso.run()
     print('end')
 
