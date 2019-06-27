@@ -26,7 +26,7 @@ class PSO:
         self.invoke+=1
         if(self.invoke>1e5):
             raise RuntimeError("超过调用次数")
-        return func(x)
+        return self.func(x)
     def isExceed(self,x):
         for i in range(self.dim_num):
             if(x[i]<self.bounds[i][0] or x[i]>self.bounds[i][1]):
@@ -73,10 +73,11 @@ class PSO:
             self.pop.sort(key=takefitness)
             if(self.pop[0]['pos'][-1]<self.gbest[-1]):
                 self.gbest =np.array(self.pop[0]['pos'])
-            if(self.dim_num>4):
-                print('{}th best:'.format(i), self.gbest[-1])
-            else:
-                print('{}th best:'.format(i), self.gbest)
+            # if(self.dim_num>4):
+            #     print('{}th best:'.format(i), self.gbest[-1])
+            # else:
+            #     print('{}th best:'.format(i), self.gbest)
+
 
 
 
@@ -85,14 +86,23 @@ class PSO:
         self.__initilize()
         self.__go()
 
-
-if __name__=='__main__':
-    dim_num=30
-    func=setfunc('sincos',dim_num=dim_num)
+def testOnAFunction(func_name,dim_num):
+    func=setfunc(func_name,dim_num=dim_num)
     from WWO import genBounds
-    bounds=genBounds(-100,100,dim_num)
+    from Func import upbound
+    maxbound=upbound(func_name)
+    bounds=genBounds(-maxbound,maxbound,dim_num)
     pso=PSO(dim_num=dim_num,func=func,iter_num=300,pop_size=50,bounds=bounds)
     pso.run()
+    if (pso.dim_num > 4):
+        print('{}th best:'.format(func_name), pso.gbest[-1])
+    else:
+        print('{}th best:'.format(func_name), pso.gbest)
+
+if __name__=='__main__':
+    dim_num = 30
+    for name in range(1,21):
+        testOnAFunction(name,dim_num)
     print('end')
 
 
