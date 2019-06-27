@@ -8,7 +8,6 @@ def takefitness(x):
 
 C1=2.0
 C2=2.0
-weight=1.0
 
 class PSO:
     def __init__(self,**kwargs):
@@ -62,6 +61,7 @@ class PSO:
 
     def __go(self):
         for i in range(self.iter_num):
+            weight=(i/self.iter_num)**2
             for j in range(self.pop_size):
                 for k in range(len(self.pop[j]['v'])):
                     self.pop[j]['v'][k]=weight*self.pop[j]['v'][k]+C1*runiform(0,1)*(self.pop[j]['pbest'][k]-self.pop[j]['pos'][k])+C2*runiform(0,1)*(self.gbest[k]-self.pop[j]['pos'][k])
@@ -90,7 +90,7 @@ def testOnAFunction(func_name,dim_num):
     from Func import upbound
     maxbound=upbound(func_name)
     bounds=genBounds(-maxbound,maxbound,dim_num)
-    pso=PSO(dim_num=dim_num,func=func,iter_num=200,pop_size=50,bounds=bounds)
+    pso=PSO(dim_num=dim_num,func=func,iter_num=2000,pop_size=50,bounds=bounds)
     pso.run()
     if (pso.dim_num > 4):
         print('{}th best:'.format(func_name), pso.gbest[-1])
