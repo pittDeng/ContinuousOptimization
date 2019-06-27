@@ -110,21 +110,31 @@ class WWO(PO):
             self.pop.sort(key=takefitness,reverse=not self.minimize)
             self.best=self.pop[0]
             self.worst=self.pop[-1]
-            if(self.dim_num<4):
-                print('{}th best value'.format(i), self.best['pos'], self.best['fitness'])
-            else:
-                print('{}th best value'.format(i), self.best['fitness'])
+            # if(self.dim_num<4):
+            #     print('{}th best value'.format(i), self.best['pos'], self.best['fitness'])
+            # else:
+            #     print('{}th best value'.format(i), self.best['fitness'])
 
 
     def run(self):
         self.__initialize()
         self.__go()
 
+def testOnAFunction(func_name,dim_num):
+    func=setfunc(func_name,dim_num=dim_num)
+    from Func import upbound
+    maxbound=upbound(func_name)
+    bounds=genBounds(-maxbound,maxbound,dim_num)
+    wwo=WWO(func=func,dim_num=dim_num,iter_num=300,pop_size=50,bounds=bounds)
+    wwo.run()
+    if (wwo.dim_num > 4):
+        print('{}th best:'.format(func_name), wwo.best['fitness'])
+    else:
+        print('{}th best:'.format(func_name), wwo.best)
+
 
 if __name__=='__main__':
     dim_num=30
-    func=setfunc('sincos',dim_num=dim_num)
-    bounds=genBounds(-100,100,dim_num)
-    wwo=WWO(func=func,dim_num=dim_num,iter_num=300,pop_size=50,bounds=bounds)
-    wwo.run()
+    for name in range(1,21):
+        testOnAFunction(name,dim_num)
     print('end')

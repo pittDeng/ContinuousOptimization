@@ -6,9 +6,9 @@ def runiform(lowbound,highbound):
 def takefitness(x):
     return x['pos'][-1]
 
-C1=2
-C2=2
-weight=1
+C1=2.0
+C2=2.0
+weight=1.0
 
 class PSO:
     def __init__(self,**kwargs):
@@ -23,15 +23,15 @@ class PSO:
         if(len(self.bounds)!=self.dim_num):
             raise RuntimeError('bounds矩阵的维数与dim_num不一致')
     def innerfunc(self,x):
-        self.invoke+=1
-        if(self.invoke>1e5):
-            raise RuntimeError("超过调用次数")
+        # self.invoke+=1
+        # if(self.invoke>1e5):
+        #     raise RuntimeError("超过调用次数")
         return self.func(x)
-    def isExceed(self,x):
+    def CheckExceed(self,x):
         for i in range(self.dim_num):
             if(x[i]<self.bounds[i][0] or x[i]>self.bounds[i][1]):
-                return True
-        return False
+                x[i]=runiform(self.bounds[i][0],self.bounds[i][1])
+        return x
 
     def __initilizeOne(self):
         '''
@@ -63,24 +63,22 @@ class PSO:
     def __go(self):
         for i in range(self.iter_num):
             for j in range(self.pop_size):
-                self.pop[j]['v']=weight*self.pop[j]['v']+C1*runiform(0,1)*(self.pop[j]['pbest'][:-1]-self.pop[j]['pos'][:-1])+C2*runiform(0,1)*(self.gbest[:-1]-self.pop[j]['pos'][:-1])
+                for k in range(len(self.pop[j]['v'])):
+                    self.pop[j]['v'][k]=weight*self.pop[j]['v'][k]+C1*runiform(0,1)*(self.pop[j]['pbest'][k]-self.pop[j]['pos'][k])+C2*runiform(0,1)*(self.gbest[k]-self.pop[j]['pos'][k])
                 self.pop[j]['pos'][:-1]+=self.pop[j]['v']
-                if(self.isExceed(self.pop[j]['pos'][:-1])):
-                    self.pop[j]=self.__initilizeOne()
+                # if(self.isExceed(self.pop[j]['pos'][:-1])):
+                #     self.pop[j]=self.__initilizeOne()
+                self.pop[j]['pos'][:-1]=self.CheckExceed(self.pop[j]['pos'][:-1])
                 self.pop[j]['pos'][-1]=self.innerfunc(self.pop[j]['pos'][:-1])
                 if(self.pop[j]['pos'][-1]<self.pop[j]['pbest'][-1]):
-                    self.pop[j]['pbest']=self.pop[j]['pos']
+                    self.pop[j]['pbest']=self.pop[j]['pos'].copy()
             self.pop.sort(key=takefitness)
             if(self.pop[0]['pos'][-1]<self.gbest[-1]):
                 self.gbest =np.array(self.pop[0]['pos'])
-            # if(self.dim_num>4):
-            #     print('{}th best:'.format(i), self.gbest[-1])
-            # else:
-            #     print('{}th best:'.format(i), self.gbest)
-
-
-
-
+            if(self.dim_num>4):
+                print('{}th best:'.format(i), self.gbest[-1])
+            else:
+                print('{}th best:'.format(i), self.gbest)
 
     def run(self):
         self.__initilize()
@@ -92,7 +90,7 @@ def testOnAFunction(func_name,dim_num):
     from Func import upbound
     maxbound=upbound(func_name)
     bounds=genBounds(-maxbound,maxbound,dim_num)
-    pso=PSO(dim_num=dim_num,func=func,iter_num=300,pop_size=50,bounds=bounds)
+    pso=PSO(dim_num=dim_num,func=func,iter_num=200,pop_size=50,bounds=bounds)
     pso.run()
     if (pso.dim_num > 4):
         print('{}th best:'.format(func_name), pso.gbest[-1])
@@ -101,7 +99,7 @@ def testOnAFunction(func_name,dim_num):
 
 if __name__=='__main__':
     dim_num = 30
-    for name in range(1,21):
+    for name in range(1,2):
         testOnAFunction(name,dim_num)
     print('end')
 
