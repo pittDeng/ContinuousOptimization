@@ -61,7 +61,8 @@ class PSO:
 
     def __go(self):
         for i in range(self.iter_num):
-            weight=(i/self.iter_num)**2
+            # weight=(i/self.iter_num)**10
+            weight=0.0
             for j in range(self.pop_size):
                 for k in range(len(self.pop[j]['v'])):
                     self.pop[j]['v'][k]=weight*self.pop[j]['v'][k]+C1*runiform(0,1)*(self.pop[j]['pbest'][k]-self.pop[j]['pos'][k])+C2*runiform(0,1)*(self.gbest[k]-self.pop[j]['pos'][k])
@@ -96,11 +97,18 @@ def testOnAFunction(func_name,dim_num):
         print('{}th best:'.format(func_name), pso.gbest[-1])
     else:
         print('{}th best:'.format(func_name), pso.gbest)
+    return pso.gbest[-1]
 
 if __name__=='__main__':
     dim_num = 30
-    for name in range(1,2):
-        testOnAFunction(name,dim_num)
+    from ToExcel import ToExcel
+    # toexcel=ToExcel("psodata.xls","data")
+    for index in range(10,20):
+        for name in range(3,4):
+            res=testOnAFunction(name,dim_num)
+            # toexcel.insertData(name,index,res)
+        print("{}time has been finished".format(index))
+    # toexcel.save()
     print('end')
 
 

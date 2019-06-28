@@ -42,16 +42,14 @@ def setfunc(name,dim_num):
             return 1-math.cos(2*math.pi*sumsquare)+0.1*sumsquare
         return f
     if name==3:
-        import decimal
-        def dec(tempx):
-            return decimal.Decimal(tempx)
         def f(x):
             if(len(x)!=dim_num):
                 raise RuntimeError("输入数据的维数出错")
-            res=dec(0.0)
+            # res=dec(0.0)
+            res=0.0
             index=1
             for xi in x:
-                res+=(dec(10e6)**dec((index-1)*xi*xi/(len(x)-1)))
+                res+=(10e6**((index-1)/(len(x)-1)))*xi*xi
                 index+=1
             return res
         return f
@@ -132,7 +130,7 @@ def setfunc(name,dim_num):
                 raise RuntimeError("输入数据的维数出错")
             res=0.0
             for i in range(len(x)):
-                res+=(abs(x[i])**i+2)
+                res+=(abs(x[i])**(i+2))
             return res
         return f
     if name==12:
@@ -216,7 +214,7 @@ def setfunc(name,dim_num):
                 yi=xi
             else:
                 yi=round(2*xi)/2
-            return yi-10*math.cos(2*math.pi*yi)+10
+            return yi**2-10*math.cos(2*math.pi*yi)+10
         def f(x):
             if (len(x) != dim_num):
                 raise RuntimeError("输入数据的维数出错")
