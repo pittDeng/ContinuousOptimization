@@ -35,11 +35,11 @@ def setfunc(name,dim_num):
         def f(x):
             if(len(x)!=dim_num):
                 raise RuntimeError("输入数据的维数出错")
-            sumsquare=0
-            for xi in x:
-                sumsquare+=xi**2
-            sumsquare=sumsquare**0.5
-            return 1-math.cos(2*math.pi*sumsquare)+0.1*sumsquare
+            res=0.0
+            res+=((x[0]-1)**2)
+            for i in range(1,len(x)):
+                res+=((i+1)*(2*x[i]**2-x[i-1])**2)
+            return res
         return f
     if name==3:
         def f(x):
@@ -81,7 +81,7 @@ def setfunc(name,dim_num):
 
             for i in range(1,len(x)):
                 temp=0.0
-                for j in range(0,i):
+                for j in range(0,i+1):
                     temp+=x[j]
                 res+=(temp)**2
             return res

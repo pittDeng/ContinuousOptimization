@@ -61,9 +61,16 @@ class PSO:
 
     def __go(self):
         for i in range(self.iter_num):
-            # weight=(i/self.iter_num)**10
+            # weight=0.5*(i/self.iter_num)**2
             weight=0.0
             for j in range(self.pop_size):
+                # weight=0.0
+                # if(j<=0.2*self.pop_size):
+                #     weight=0.5
+                # else:
+                #     # weight=0.0
+                #     weight=0.5*(1-j/self.pop_size)
+                # weight=0.5*(1-j/self.pop_size)
                 for k in range(len(self.pop[j]['v'])):
                     self.pop[j]['v'][k]=weight*self.pop[j]['v'][k]+C1*runiform(0,1)*(self.pop[j]['pbest'][k]-self.pop[j]['pos'][k])+C2*runiform(0,1)*(self.gbest[k]-self.pop[j]['pos'][k])
                 self.pop[j]['pos'][:-1]+=self.pop[j]['v']
@@ -76,10 +83,10 @@ class PSO:
             self.pop.sort(key=takefitness)
             if(self.pop[0]['pos'][-1]<self.gbest[-1]):
                 self.gbest =np.array(self.pop[0]['pos'])
-            if(self.dim_num>4):
-                print('{}th best:'.format(i), self.gbest[-1])
-            else:
-                print('{}th best:'.format(i), self.gbest)
+            # if(self.dim_num>4):
+            #     print('{}th best:'.format(i), self.gbest[-1])
+            # else:
+            #     print('{}th best:'.format(i), self.gbest)
 
     def run(self):
         self.__initilize()
@@ -100,15 +107,16 @@ def testOnAFunction(func_name,dim_num):
     return pso.gbest[-1]
 
 if __name__=='__main__':
-    dim_num = 30
+    dim_num = 10
     from ToExcel import ToExcel
-    # toexcel=ToExcel("psodata.xls","data")
-    for index in range(10,20):
-        for name in range(3,4):
+    toexcel=ToExcel("constantpsodata15.xls","data")
+    # toexcel = ToExcel("psodata.xls", "data")
+    for index in range(0,20):
+        for name in range(1,21):
             res=testOnAFunction(name,dim_num)
-            # toexcel.insertData(name,index,res)
+            toexcel.insertData(name,index,res)
         print("{}time has been finished".format(index))
-    # toexcel.save()
+        toexcel.save()
     print('end')
 
 
