@@ -71,7 +71,7 @@ class PSO:
                 # else:
                 #     # weight=0.0
                 #     weight=0.5*(1-j/self.pop_size)
-                # weight=0.5*(1-j/self.pop_size)
+                weight=0.5*(1-j/self.pop_size)
                 tempBest=random.randint(0,math.floor(0.1*self.pop_size))
                 for k in range(len(self.pop[j]['v'])):
                     self.pop[j]['v'][k]=weight*self.pop[j]['v'][k]+C1*runiform(0,1)*(self.pop[j]['pbest'][k]-self.pop[j]['pos'][k])+C2*runiform(0,1)*(self.pop[tempBest]['pos'][k]-self.pop[j]['pos'][k])
@@ -111,7 +111,7 @@ def testOnAFunction(func_name,dim_num):
 if __name__=='__main__':
     dim_num = 10
     from ToExcel import ToExcel
-    toExcel=ToExcel("group_constant.xls","data")
+    toExcel=ToExcel("si_group_constant.xls","data")
     for index in range(0,20):
         for name in range(1,21):
             res=testOnAFunction(name,dim_num)
