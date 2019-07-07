@@ -1,3 +1,4 @@
+import math
 import random
 from Func import setfunc
 import numpy as np
@@ -63,7 +64,7 @@ class PSO:
         for i in range(self.iter_num):
             # weight=0.5*(i/self.iter_num)**2
             weight=0.0
-            for j in range(self.pop_size):
+            for j in range(math.floor(0.1*self.pop_size),self.pop_size):
                 # weight=0.0
                 # if(j<=0.2*self.pop_size):
                 #     weight=0.5
@@ -71,8 +72,9 @@ class PSO:
                 #     # weight=0.0
                 #     weight=0.5*(1-j/self.pop_size)
                 # weight=0.5*(1-j/self.pop_size)
+                tempBest=random.randint(0,math.floor(0.1*self.pop_size))
                 for k in range(len(self.pop[j]['v'])):
-                    self.pop[j]['v'][k]=weight*self.pop[j]['v'][k]+C1*runiform(0,1)*(self.pop[j]['pbest'][k]-self.pop[j]['pos'][k])+C2*runiform(0,1)*(self.gbest[k]-self.pop[j]['pos'][k])
+                    self.pop[j]['v'][k]=weight*self.pop[j]['v'][k]+C1*runiform(0,1)*(self.pop[j]['pbest'][k]-self.pop[j]['pos'][k])+C2*runiform(0,1)*(self.pop[tempBest]['pos'][k]-self.pop[j]['pos'][k])
                 self.pop[j]['pos'][:-1]+=self.pop[j]['v']
                 # if(self.isExceed(self.pop[j]['pos'][:-1])):
                 #     self.pop[j]=self.__initilizeOne()
@@ -109,14 +111,13 @@ def testOnAFunction(func_name,dim_num):
 if __name__=='__main__':
     dim_num = 10
     from ToExcel import ToExcel
-    toexcel=ToExcel("constantpsodata15.xls","data")
-    # toexcel = ToExcel("psodata.xls", "data")
+    toExcel=ToExcel("group_constant.xls","data")
     for index in range(0,20):
         for name in range(1,21):
             res=testOnAFunction(name,dim_num)
-            toexcel.insertData(name,index,res)
+            toExcel.insertData(name,index,res)
+        toExcel.save()
         print("{}time has been finished".format(index))
-        toexcel.save()
     print('end')
 
 
